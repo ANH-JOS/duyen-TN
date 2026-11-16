@@ -1,0 +1,524 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Thiệp Mời Tốt Nghiệp</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700&family=Dancing+Script:wght@600;700&family=Nunito:wght@400;500;600;700;800&display=swap">
+<style>
+  :root {
+    --bg:#fff; --ink:#17334d; --ink-soft:#587189; --line:#d9e8f4; --sky-pale:#eaf5fd; --sky-light:#a9d9f6; --sky:#6bb8ee; --sky-deep:#3f9ee0; --sky-dark:#2f86c7; --navy:#1d5f99;
+    --sun:#ffc83d; --sun-soft:#ffe08a; --sun-deep:#f0aa08;
+    --font-script:"Dancing Script","Brush Script MT",cursive; --font-head:"Baloo 2","Nunito",system-ui,sans-serif; --font-body:"Nunito",system-ui,-apple-system,"Segoe UI",sans-serif;
+    color-scheme: light;
+  }
+  * { box-sizing: border-box; }
+  html { min-height: 100%; }
+  body { margin:0; background:var(--bg); color:var(--ink); font-family:var(--font-body); font-size:16px; line-height:1.65;
+    padding-left:max(16px, env(safe-area-inset-left,0px)); padding-right:max(16px, env(safe-area-inset-right,0px)); overflow-x:hidden; }
+  [hidden] { display:none !important; }
+  button { font-family:inherit; }
+  :focus-visible { outline:3px solid var(--sun-deep); outline-offset:3px; }
+
+  .confetti { position:absolute; inset:0; overflow:hidden; pointer-events:none; }
+  .confetti i { position:absolute; display:block; animation:drift 6s ease-in-out infinite alternate; }
+  .confetti .c { border-radius:50%; } .confetti .r { border-radius:2px; }
+  .confetti .s { clip-path:polygon(50% 0,61% 36%,98% 38%,68% 60%,79% 96%,50% 74%,21% 96%,32% 60%,2% 38%,39% 36%); }
+  @keyframes drift { from { translate:0 0; rotate:0deg; } to { translate:0 -10px; rotate:18deg; } }
+
+  .stage { --w:min(86vw,380px); position:relative; min-height:100dvh; display:flex; flex-direction:column; align-items:center; justify-content:center;
+    padding-block:32px; padding-inline:16px; margin-inline:calc(-1 * max(16px, env(safe-area-inset-left,0px))); overflow:hidden; transition:opacity .6s ease, transform .6s ease; }
+  .stage.leave { opacity:0; transform:translateY(-12px); pointer-events:none; }
+  .lead { position:relative; text-align:center; margin:0 0 calc(var(--w) * 0.40); transition:opacity .4s ease; }
+  .lead small { display:block; font-size:12px; font-weight:700; letter-spacing:.24em; text-transform:uppercase; color:var(--sky-dark); margin-bottom:8px; }
+  .lead h1 { font-family:var(--font-script); font-weight:700; font-size:clamp(38px,10.5vw,52px); line-height:1.05; margin:0; text-wrap:balance; color:var(--navy); }
+  .stage.opening .lead { opacity:0; }
+
+  .env { position:relative; width:var(--w); aspect-ratio:3/2; filter:drop-shadow(0 20px 22px rgba(47,134,199,.28)); }
+  .env > * { position:absolute; }
+  .env-back { inset:0; background:linear-gradient(180deg,#2f86c7,#3a93d6); border-radius:8px; }
+  .card { left:6%; right:6%; top:6%; height:88%; background:#fff; border-radius:5px; z-index:2; display:flex; flex-direction:column; align-items:center; padding-top:7%; text-align:center;
+    box-shadow:inset 0 0 0 1px var(--line); transition:transform .9s cubic-bezier(.22,.8,.3,1); }
+  .card::after { content:""; position:absolute; inset:7px; border:1px dashed var(--sky-light); border-radius:3px; pointer-events:none; }
+  .card .cap-mini { width:clamp(24px,8vw,32px); height:auto; color:var(--sky-dark); }
+  .card .mini-k { font-size:clamp(8px,2.4vw,10px); letter-spacing:.26em; text-transform:uppercase; color:var(--sky-dark); font-weight:700; margin-top:6px; }
+  .card .mini-n { font-family:var(--font-script); font-weight:700; font-size:clamp(24px,7vw,32px); line-height:1.1; margin-top:2px; padding-inline:12px; color:var(--navy); }
+  .card .mini-rule { width:30px; height:3px; background:var(--sun); border-radius:2px; margin-top:6px; }
+  .card .mini-d { font-size:clamp(9px,2.7vw,11px); letter-spacing:.14em; color:var(--ink-soft); margin-top:7px; font-weight:600; }
+  .rise .card { transform:translateY(-64%); }
+
+  .pocket { inset:0; z-index:3; pointer-events:none; }
+  .pk-l { background:linear-gradient(100deg,#5fb1ec,#78c2f3); clip-path:polygon(0 0,52% 52%,0 100%); border-radius:8px 0 0 8px; }
+  .pk-r { background:linear-gradient(260deg,#5fb1ec,#78c2f3); clip-path:polygon(100% 0,48% 52%,100% 100%); border-radius:0 8px 8px 0; }
+  .pk-b { background:linear-gradient(0deg,#8fd0f7,#7cc5f3); clip-path:polygon(0 100%,50% 48%,100% 100%); border-radius:0 0 8px 8px; }
+  .flap { left:0; top:0; width:100%; height:56%; background:linear-gradient(180deg,#3b99dd,#4aa8ea); clip-path:polygon(0 0,100% 0,50% 100%);
+    transform-origin:50% 0; transition:transform .75s cubic-bezier(.5,0,.3,1); z-index:4; border-radius:8px 8px 0 0; }
+  .opening .flap { transform:rotateX(180deg); }
+  .flap-back .flap { z-index:1; background:#2a78b5; }
+
+  .open-btn { left:50%; top:56%; transform:translate(-50%,-50%); z-index:5; width:70px; height:70px; border:0; border-radius:50%;
+    background:radial-gradient(circle at 35% 28%,var(--sun-soft) 0%,var(--sun) 50%,var(--sun-deep) 100%); color:#4a3300; font-weight:800; font-size:15px; letter-spacing:.08em; text-transform:uppercase; cursor:pointer;
+    box-shadow:0 4px 0 #c98a00,0 10px 18px rgba(240,170,8,.5),inset 0 0 0 3px rgba(255,255,255,.35); transition:transform .2s ease, opacity .3s ease, box-shadow .2s ease; }
+  .open-btn::before { content:""; position:absolute; inset:-9px; border-radius:50%; border:2px solid var(--sun); opacity:0; animation:ring 2.2s ease-out infinite; }
+  .open-btn:hover { transform:translate(-50%,-52%) scale(1.05); }
+  .open-btn:active { transform:translate(-50%,-48%) scale(.97); box-shadow:0 1px 0 #c98a00,0 4px 10px rgba(240,170,8,.4),inset 0 0 0 3px rgba(255,255,255,.35); }
+  .opening .open-btn { opacity:0; pointer-events:none; transform:translate(-50%,-50%) scale(.6); }
+  @keyframes ring { 0% { transform:scale(.85); opacity:.9; } 100% { transform:scale(1.4); opacity:0; } }
+  .hint { position:relative; margin:30px 0 0; font-size:14px; color:var(--ink-soft); text-align:center; transition:opacity .3s ease; }
+  .opening .hint { opacity:0; }
+
+  .invite { position:relative; isolation:isolate; margin-inline:calc(-1 * max(16px, env(safe-area-inset-left,0px))); padding-inline:max(16px, env(safe-area-inset-left,0px)); opacity:0; transition:opacity .9s ease; }
+  .invite.show { opacity:1; }
+  .wash { position:fixed; inset:0; z-index:-2; background:#f5fafe; overflow:hidden; }
+  .wash i { position:absolute; border-radius:50%; filter:blur(70px); opacity:.75; }
+  .wash .w1 { width:60vmax; height:40vmax; left:-15vmax; top:-10vmax; background:#b9def8; }
+  .wash .w2 { width:50vmax; height:36vmax; right:-14vmax; top:18vh; background:#ffe9ad; opacity:.6; }
+  .wash .w3 { width:52vmax; height:38vmax; left:-12vmax; bottom:-12vmax; background:#c6ecdc; opacity:.65; }
+  .wash .w4 { width:44vmax; height:34vmax; right:-10vmax; bottom:-10vmax; background:#c9d9ff; }
+  .fall { position:fixed; inset:0; z-index:-1; pointer-events:none; overflow:hidden; }
+  .fall svg { position:absolute; top:-40px; color:#6f8ca6; opacity:.45; animation:fall linear infinite; }
+  .fall .ring { width:18px; height:18px; border:1.5px solid var(--sky); border-radius:50%; position:absolute; top:-40px; opacity:.5; animation:fall linear infinite; }
+  @keyframes fall { 0% { transform:translate(0,-40px) rotate(0deg); } 50% { transform:translate(26px,50vh) rotate(180deg); } 100% { transform:translate(-12px,108vh) rotate(360deg); } }
+
+  .wrap { max-width:920px; margin:0 auto; padding-block:28px 56px; display:flex; flex-direction:column; gap:72px; }
+  .sect-title { font-family:var(--font-head); font-weight:700; font-size:clamp(28px,6.5vw,38px); line-height:1.1; color:var(--navy); margin:0; text-align:center; text-wrap:balance; }
+  .paper { position:relative; overflow:hidden; width:100%; max-width:640px; margin-inline:auto; background:rgba(255,255,255,.8); -webkit-backdrop-filter:blur(6px); backdrop-filter:blur(6px);
+    border-radius:26px; box-shadow:0 0 0 1px rgba(255,255,255,.9),0 20px 44px rgba(47,134,199,.16); padding:34px 30px; }
+  .paper::before,.paper::after { content:""; position:absolute; border-radius:50%; filter:blur(34px); pointer-events:none; z-index:0; }
+  .paper::before { width:220px; height:200px; left:-70px; top:-70px; background:#bfe1f8; opacity:.8; }
+  .paper::after { width:220px; height:200px; right:-70px; bottom:-70px; background:#ffe9ad; opacity:.75; }
+  .paper > * { position:relative; z-index:1; }
+
+  .hero { text-align:center; display:flex; flex-direction:column; align-items:center; gap:6px; padding-top:8px; }
+  .kicker { margin:0; font-size:13px; font-weight:800; letter-spacing:.28em; text-transform:uppercase; color:var(--sky-dark); }
+  .hero h2 { font-family:var(--font-script); font-weight:700; font-size:clamp(54px,15vw,96px); line-height:1; margin:0; color:var(--navy); }
+  .arch { width:min(230px,62vw); aspect-ratio:4/5; margin-top:14px; border-radius:999px 999px 26px 26px; background:linear-gradient(170deg,#fff 0%,#cfe9fa 100%);
+    box-shadow:0 0 0 6px #fff,0 0 0 7px var(--sky-light),0 22px 40px rgba(47,134,199,.22); display:flex; flex-direction:column; align-items:center; justify-content:center; gap:10px; color:var(--sky-dark); }
+  .arch svg { width:74px; height:auto; }
+  .arch span { font-size:13px; font-weight:700; letter-spacing:.06em; color:var(--ink-soft); }
+  .hero .name { font-family:var(--font-head); font-weight:700; font-size:clamp(26px,7vw,36px); margin:18px 0 0; color:var(--ink); line-height:1.15; }
+  .hero .meta { margin:0; color:var(--ink-soft); font-size:15px; max-width:42ch; text-wrap:balance; font-weight:500; }
+  .count { margin-top:10px; display:inline-block; font-size:14px; font-weight:800; color:#5c3f00; background:var(--sun); padding:5px 16px; border-radius:999px; font-variant-numeric:tabular-nums; box-shadow:0 4px 0 #d79a00; }
+
+  .cal-title { font-family:var(--font-script); font-weight:700; font-size:clamp(42px,11vw,58px); line-height:1; text-align:center; margin:0; color:var(--navy); }
+  .cal-sub { text-align:center; font-family:var(--font-head); font-weight:700; font-size:20px; color:var(--sky-dark); margin:6px 0 20px; }
+  .cal { display:grid; grid-template-columns:repeat(7,1fr); row-gap:6px; text-align:center; }
+  .cal b { font-family:var(--font-head); font-weight:700; color:var(--navy); font-size:15px; padding-bottom:6px; }
+  .cal span { position:relative; display:grid; place-items:center; height:46px; font-family:var(--font-head); font-weight:600; font-size:18px; color:var(--sky-dark); font-variant-numeric:tabular-nums; }
+  .cal span.mark { color:var(--navy); font-weight:800; }
+  .cal span.mark svg { position:absolute; width:58px; height:58px; left:50%; top:50%; translate:-50% -50%; rotate:-8deg; }
+  .cal span.mark em { position:relative; font-style:normal; }
+
+  .letter h3 { font-family:var(--font-head); font-weight:700; color:var(--sky-dark); font-size:30px; margin:0 0 14px; text-align:center; }
+  .letter p { margin:0 0 14px; font-size:16.5px; font-weight:500; text-wrap:pretty; }
+  .letter .hi { font-weight:800; }
+  .letter ul { margin:6px 0 16px; padding-left:0; list-style:none; display:grid; gap:8px; }
+  .letter li { display:grid; grid-template-columns:94px 1fr; gap:10px; font-weight:500; }
+  .letter li b { font-weight:800; color:var(--navy); }
+  .letter .sign { font-family:var(--font-script); font-weight:700; font-size:40px; text-align:right; color:var(--navy); margin:10px 0 0; line-height:1; }
+  .map-link { display:inline-block; margin-top:4px; padding:10px 22px; border-radius:999px; background:var(--sky-dark); color:#fff; text-decoration:none; font-weight:800; font-size:14px; transition:background .2s ease, transform .2s ease; }
+  .map-link:hover { background:#276fae; transform:translateY(-1px); }
+
+  .tl-wrap { display:flex; flex-direction:column; gap:36px; }
+  .tl { position:relative; display:grid; gap:40px; }
+  .tl::before { content:""; position:absolute; left:50%; top:0; bottom:0; width:3px; background:var(--sky-deep); border-radius:2px; translate:-50% 0; opacity:.8; }
+  .tl-item { position:relative; display:grid; grid-template-columns:1fr 1fr; gap:140px; align-items:center; }
+  .tl-item:nth-child(even) .photo { order:2; justify-self:start; }
+  .tl-item:nth-child(odd) .photo { justify-self:end; }
+  .pill { position:absolute; left:50%; top:50%; translate:-50% -50%; z-index:2; background:#fff; color:var(--navy); font-family:var(--font-head); font-weight:700; font-size:17px; padding:4px 16px; border-radius:999px; box-shadow:0 0 0 4px #d7ecfb,0 8px 16px rgba(47,134,199,.2); font-variant-numeric:tabular-nums; white-space:nowrap; }
+  .photo { width:100%; max-width:300px; aspect-ratio:1/1; border-radius:22px; overflow:hidden; background:linear-gradient(160deg,#e8f4fd,#bfe0f6); box-shadow:0 0 0 5px #fff,0 16px 30px rgba(47,134,199,.2);
+    display:flex; flex-direction:column; align-items:center; justify-content:center; gap:6px; color:var(--sky-dark); }
+  .photo svg { width:48px; height:auto; }
+  .photo span { font-size:12px; font-weight:700; color:var(--ink-soft); letter-spacing:.04em; }
+  .note { background:rgba(255,255,255,.88); border-radius:22px; padding:22px; box-shadow:0 0 0 1px rgba(255,255,255,.9),0 14px 30px rgba(47,134,199,.14); font-size:15.5px; font-weight:500; }
+  .note h4 { margin:0 0 6px; font-family:var(--font-head); font-weight:700; font-size:19px; color:var(--navy); }
+  .note p { margin:0; text-wrap:pretty; }
+  .hl-y { background:linear-gradient(transparent 55%,rgba(255,200,61,.55) 55%); }
+  .hl-b { background:linear-gradient(transparent 55%,rgba(107,184,238,.45) 55%); }
+  .hl-g { background:linear-gradient(transparent 55%,rgba(120,214,170,.5) 55%); }
+
+  .hero-cta { margin-top:14px; border:2px solid var(--sky-dark); background:rgba(255,255,255,.85); color:var(--navy); font-weight:800; font-size:15px; padding:10px 22px; border-radius:999px; cursor:pointer; transition:background .2s ease, color .2s ease; }
+  .hero-cta:hover { background:var(--sky-dark); color:#fff; }
+  #wishes { scroll-margin-top:24px; }
+  .wish-head { text-align:center; margin-bottom:18px; }
+  .wish-head p { margin:8px auto 0; max-width:44ch; color:var(--ink-soft); font-weight:600; }
+  .wish-note { background:#fff6dc; border-radius:14px; padding:12px 16px; font-size:14px; font-weight:600; color:#6a4b00; margin-bottom:14px; }
+  .wish-form { display:grid; gap:8px; }
+  .wish-form label { font-weight:800; font-size:14px; color:var(--navy); }
+  .wish-form input,.wish-form textarea { width:100%; font:inherit; font-size:16px; font-weight:500; color:var(--ink); background:rgba(255,255,255,.95); border:1.5px solid var(--sky-light); border-radius:14px; padding:11px 14px; }
+  .wish-form textarea { min-height:120px; resize:vertical; }
+  .wish-form input:focus,.wish-form textarea:focus { border-color:var(--sky-dark); outline:none; box-shadow:0 0 0 3px rgba(63,158,224,.28); }
+  .wish-row { display:flex; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap; margin-top:4px; }
+  .wish-count { font-size:13px; color:var(--ink-soft); font-weight:600; font-variant-numeric:tabular-nums; }
+  .btn-send { border:0; cursor:pointer; padding:12px 28px; border-radius:999px; background:radial-gradient(circle at 35% 28%,var(--sun-soft),var(--sun) 55%,var(--sun-deep)); color:#4a3300; font-weight:800; font-size:15px; box-shadow:0 4px 0 #c98a00,0 8px 16px rgba(240,170,8,.35); }
+  .btn-send:active { transform:translateY(2px); box-shadow:0 2px 0 #c98a00; }
+  .btn-send[disabled] { opacity:.6; cursor:default; }
+  .wish-msg { margin:0; min-height:1.4em; font-size:14px; font-weight:700; }
+  .wish-msg.ok { color:#176a43; } .wish-msg.err { color:#a23a1c; }
+  .wish-alt { text-align:center; margin-top:10px; }
+  .wish-list-title { font-family:var(--font-head); font-weight:700; color:var(--navy); font-size:22px; margin:26px 0 12px; }
+  .wish-load { margin:0 0 10px; color:var(--ink-soft); font-weight:600; font-size:14px; }
+  .wish-list { display:grid; gap:10px; max-height:480px; overflow-y:auto; padding:2px 4px 2px 0; }
+  .wish-item { background:rgba(255,255,255,.94); border:1.5px solid var(--sky-light); border-radius:16px; padding:12px 16px; }
+  .wish-item b { color:var(--navy); font-weight:800; }
+  .wish-item p { margin:2px 0 0; font-weight:500; overflow-wrap:anywhere; white-space:pre-wrap; }
+  .wish-item small { display:block; margin-top:4px; color:var(--ink-soft); font-size:12px; font-weight:600; font-variant-numeric:tabular-nums; }
+  .wish-empty { text-align:center; color:var(--ink-soft); font-weight:600; padding:20px 10px; border:1.5px dashed var(--sky-light); border-radius:16px; }
+
+  .foot { text-align:center; display:flex; flex-direction:column; align-items:center; gap:8px; }
+  .foot .big { font-family:var(--font-script); font-weight:700; font-size:clamp(36px,9vw,52px); color:var(--navy); line-height:1.1; margin:0; }
+  .foot p { margin:0; color:var(--ink-soft); font-weight:600; }
+  .again { margin-top:10px; background:rgba(255,255,255,.8); border:1px solid var(--line); color:var(--ink-soft); padding:9px 18px; border-radius:999px; font-size:13px; font-weight:700; cursor:pointer; }
+  .again:hover { border-color:var(--sky-deep); color:var(--sky-dark); }
+
+  @media (max-width:720px) {
+    .wrap { gap:56px; } .paper { padding:28px 20px; } .tl { gap:36px; }
+    .tl::before { left:14px; translate:0 0; }
+    .tl-item { grid-template-columns:1fr; gap:14px; padding-left:40px; }
+    .tl-item:nth-child(even) .photo { order:0; justify-self:stretch; }
+    .tl-item:nth-child(odd) .photo { justify-self:stretch; }
+    .tl-item::before { content:""; position:absolute; left:6px; top:8px; width:18px; height:18px; border-radius:50%; background:var(--sun); box-shadow:0 0 0 4px #fff; }
+    .pill { position:static; translate:none; justify-self:start; }
+    .photo { max-width:none; aspect-ratio:4/3; }
+    .letter li { grid-template-columns:84px 1fr; }
+    .cal span { height:40px; font-size:16px; } .cal span.mark svg { width:50px; height:50px; }
+  }
+  @media (prefers-reduced-motion:reduce) {
+    .open-btn::before,.confetti i,.fall svg,.fall .ring { animation:none; }
+    .flap,.card,.stage,.invite,.lead,.hint { transition-duration:.01s; }
+  }
+</style>
+</head>
+<body>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+  <symbol id="cap-icon" viewBox="0 0 64 64">
+    <path fill="currentColor" opacity=".72" d="M16 31v12c0 4 7.2 8 16 8s16-4 16-8V31L32 39z"/>
+    <polygon fill="currentColor" points="32,10 61,24 32,38 3,24"/>
+    <line x1="55" y1="26" x2="55" y2="44" stroke="#f0aa08" stroke-width="2.5" stroke-linecap="round"/>
+    <circle cx="55" cy="47" r="3.6" fill="#ffc83d"/>
+  </symbol>
+</svg>
+
+<main>
+  <section class="stage" id="stage" aria-label="Phong bì thiệp mời">
+    <div class="confetti" data-confetti="stage" aria-hidden="true"></div>
+    <div class="lead">
+      <small>Thiệp mời tốt nghiệp</small>
+      <h1>Một lời mời dành cho bạn</h1>
+    </div>
+    <div class="env" id="env">
+      <div class="env-back"></div>
+      <div class="card" aria-hidden="true">
+        <svg class="cap-mini"><use href="#cap-icon"/></svg>
+        <span class="mini-k">Thiệp mời</span>
+        <span class="mini-n" data-k="name"></span>
+        <span class="mini-rule"></span>
+        <span class="mini-d" data-k="dateDots"></span>
+      </div>
+      <div class="pocket pk-l"></div>
+      <div class="pocket pk-r"></div>
+      <div class="pocket pk-b"></div>
+      <div class="flap"></div>
+      <button class="open-btn" id="openBtn" type="button" aria-label="Mở thiệp">Mở</button>
+    </div>
+    <p class="hint">Chạm vào nút vàng để mở thiệp</p>
+  </section>
+
+  <div class="invite" id="invite" hidden>
+    <div class="wash" aria-hidden="true"><i class="w1"></i><i class="w2"></i><i class="w3"></i><i class="w4"></i></div>
+    <div class="fall" id="fall" aria-hidden="true"></div>
+
+    <div class="wrap">
+      <header class="hero">
+        <p class="kicker">Thiệp mời</p>
+        <h2>Lễ Tốt Nghiệp</h2>
+        <div class="arch"><svg viewBox="0 0 64 64" aria-hidden="true"><use href="#cap-icon"/></svg><span>Ảnh chân dung của bạn</span></div>
+        <p class="name" data-k="name"></p>
+        <p class="meta" data-k="meta"></p>
+        <span class="count" id="count"></span>
+        <button class="hero-cta" id="heroWish" type="button">Gửi lời chúc cho mình</button>
+      </header>
+
+      <section class="paper" aria-label="Lịch tốt nghiệp">
+        <h2 class="cal-title">Lịch Tốt Nghiệp</h2>
+        <p class="cal-sub" id="calSub"></p>
+        <div class="cal" id="cal"></div>
+      </section>
+
+      <section class="paper letter" aria-label="Thư mời">
+        <h3>Thư mời</h3>
+        <p class="hi">Xin chào cả nhà thân yêu,</p>
+        <p>Khoảnh khắc mình đã chờ suốt mấy năm cuối cùng cũng tới. Ngày <b data-k="dateShort"></b> là ngày mình khép lại chặng đường đại học và mở ra một chương mới.</p>
+        <p>Có được ngày hôm nay là nhờ rất nhiều người: những lời động viên, những lần được cứu nguy trước giờ nộp bài và những buổi cà phê xả stress. Cảm ơn mọi người rất nhiều!</p>
+        <p>Sau buổi lễ, mình sẽ đợi mọi người ở <b data-k="place"></b>. Mình muốn cùng chụp thật nhiều ảnh và kể nhau nghe những chuyện vui của bốn năm vừa qua.</p>
+        <p class="hi">Thông tin buổi lễ:</p>
+        <ul>
+          <li><b>Thời gian:</b><span><span data-k="time"></span>, ngày <span data-k="dateShort"></span></span></li>
+          <li><b>Địa điểm:</b><span data-k="placeFull"></span></li>
+          <li><b>Địa chỉ:</b><span data-k="address"></span></li>
+        </ul>
+        <a class="map-link" id="mapLink" href="#" target="_blank" rel="noopener">Xem bản đồ</a>
+        <p style="margin-top:18px">Không cần quà cáp gì đâu. Mọi người đến chung vui, cho mình một cái ôm và một tấm ảnh là mình vui lắm rồi. Hẹn gặp nhé!</p>
+        <p class="sign" data-k="sign"></p>
+      </section>
+
+      <section class="tl-wrap" aria-label="Dòng thời gian">
+        <h2 class="sect-title">Dòng thời gian</h2>
+        <div class="tl">
+          <div class="tl-item">
+            <span class="pill">05/09/2022</span>
+            <div class="photo"><svg viewBox="0 0 64 64" aria-hidden="true"><use href="#cap-icon"/></svg><span>Ảnh ngày nhập học</span></div>
+            <div class="note">
+              <h4><span class="hl-g">Ngày đầu tiên lạc lối</span></h4>
+              <p>Bước qua cổng trường, mình vừa <span class="hl-y">hồi hộp</span> vừa choáng ngợp. Cả nhóm bây giờ đã gặp nhau trong buổi định hướng đầu tiên, ai cũng ngơ ngác và đi lạc <span class="hl-b">tìm phòng học</span>.</p>
+            </div>
+          </div>
+          <div class="tl-item">
+            <span class="pill">20/05/2025</span>
+            <div class="photo"><svg viewBox="0 0 64 64" aria-hidden="true"><use href="#cap-icon"/></svg><span>Ảnh mùa đồ án</span></div>
+            <div class="note">
+              <h4><span class="hl-y">Đêm chốt đồ án</span></h4>
+              <p>Đèn phòng máy sáng đến <span class="hl-b">3 giờ sáng</span>. Cả nhóm kiệt sức sau nhiều ngày làm liên tục, và khi bấm nút <span class="hl-g">nộp bài thành công</span> thì ôm nhau vỡ oà.</p>
+            </div>
+          </div>
+          <div class="tl-item">
+            <span class="pill" id="tlLastDate"></span>
+            <div class="photo"><svg viewBox="0 0 64 64" aria-hidden="true"><use href="#cap-icon"/></svg><span>Ảnh ngày tốt nghiệp</span></div>
+            <div class="note">
+              <h4><span class="hl-b">Ngày tốt nghiệp</span></h4>
+              <p>Chiếc mũ cử nhân cuối cùng cũng đội lên đầu. Mình mang theo <span class="hl-y">cả gia đình, thầy cô và bạn bè</span> trong hành trình này, và <span class="hl-g">sẵn sàng cho chương mới</span>.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="paper" id="wishes" aria-label="Lời chúc mừng">
+        <div class="wish-head">
+          <h2 class="sect-title">Lời chúc mừng</h2>
+          <p>Một lời chúc, một kỷ niệm! Hãy gửi những điều tốt đẹp nhất bạn dành cho mình vào đây. Mình sẽ giữ lại thật kỹ.</p>
+        </div>
+        <div class="wish-note" id="wishNote" hidden></div>
+        <form class="wish-form" id="wishForm" hidden novalidate>
+          <label for="wName">Tên của bạn</label>
+          <input id="wName" type="text" maxlength="40" autocomplete="name" placeholder="Nhập tên của bạn">
+          <label for="wText">Lời chúc</label>
+          <textarea id="wText" maxlength="500" placeholder="Viết lời chúc của bạn vào đây..."></textarea>
+          <input id="wWebsite" type="text" name="website" tabindex="-1" autocomplete="off" aria-hidden="true" style="position:absolute;left:-9999px;width:1px;height:1px;opacity:0">
+          <div class="wish-row">
+            <span class="wish-count" id="wCount">0/500</span>
+            <button class="btn-send" id="wSend" type="button">Gửi lời chúc</button>
+          </div>
+          <p class="wish-msg" id="wMsg" role="status"></p>
+          <a class="map-link" id="mailBtn" href="#" hidden>Gửi lời chúc này tới chủ thiệp qua email</a>
+        </form>
+        <h3 class="wish-list-title" id="wListTitle" hidden>Lời chúc từ khách mời</h3>
+        <div class="wish-list" id="wList" hidden></div>
+        <div class="wish-empty" id="wEmpty" hidden>Chưa có lời chúc nào. Hãy là người đầu tiên gửi lời chúc nhé.</div>
+      </section>
+
+      <footer class="foot">
+        <p class="big">Cảm ơn bạn rất nhiều</p>
+        <p>Hẹn gặp bạn ở buổi lễ nhé.</p>
+        <button class="again" id="again" type="button">Xem lại phong bì</button>
+      </footer>
+    </div>
+  </div>
+</main>
+
+<script>
+  /* Đổi các giá trị bên dưới thành thông tin thật của bạn. */
+  var CONFIG = {
+    name: "Nguyễn Minh Anh",
+    degree: "Cử nhân Quản trị Kinh doanh",
+    school: "Trường Đại học [Tên trường]",
+    cohort: "Khóa 2022 – 2026",
+    date: "2026-12-19",
+    time: "08:30",
+    place: "sảnh chờ",
+    placeFull: "Hội trường lớn",
+    address: "[Số nhà, đường, quận/huyện, tỉnh/thành phố]",
+    sign: "Minh Anh",
+    /* Tuỳ chọn: email của bạn. Nếu điền, sau khi khách gửi lời chúc sẽ hiện nút "Gửi lời chúc này tới chủ thiệp qua email". Để trống nếu không dùng. */
+    ownerEmail: "",
+    /* Lời chúc bạn muốn hiện công khai cho mọi người (tự thêm vào đây rồi commit). */
+    wishes: [
+      /* { name: "Lan", text: "Chúc mừng bạn tốt nghiệp nhé!", at: 1766000000000 } */
+    ]
+  };
+
+  (function () {
+    var $ = function (id) { return document.getElementById(id); };
+    var parts = CONFIG.date.split("-");
+    var Y = +parts[0], M = +parts[1], D = +parts[2];
+    function pad(n) { return (n < 10 ? "0" : "") + n; }
+    var dateShort = pad(D) + "/" + pad(M) + "/" + Y;
+
+    var vals = {
+      name: CONFIG.name,
+      dateShort: dateShort,
+      dateDots: pad(D) + " · " + pad(M) + " · " + Y,
+      meta: CONFIG.degree + " · " + CONFIG.school + " · " + CONFIG.cohort,
+      place: CONFIG.place,
+      placeFull: CONFIG.placeFull + ", " + CONFIG.school,
+      time: CONFIG.time,
+      address: CONFIG.address,
+      sign: CONFIG.sign
+    };
+    document.querySelectorAll("[data-k]").forEach(function (el) { el.textContent = vals[el.getAttribute("data-k")]; });
+    $("tlLastDate").textContent = dateShort;
+    $("calSub").textContent = "Tháng " + pad(M) + " năm " + Y;
+    $("mapLink").href = "https://www.google.com/maps/search/?api=1&query=" + encodeURIComponent(CONFIG.school + " " + CONFIG.address);
+
+    var cal = $("cal");
+    ["T2", "T3", "T4", "T5", "T6", "T7", "CN"].forEach(function (h) { var b = document.createElement("b"); b.textContent = h; cal.appendChild(b); });
+    var first = new Date(Date.UTC(Y, M - 1, 1)).getUTCDay();
+    var offset = (first + 6) % 7;
+    var total = new Date(Date.UTC(Y, M, 0)).getUTCDate();
+    for (var i = 0; i < offset; i++) cal.appendChild(document.createElement("span"));
+    for (var d = 1; d <= total; d++) {
+      var s = document.createElement("span");
+      if (d === D) {
+        s.className = "mark";
+        s.innerHTML = '<svg viewBox="0 0 48 48" aria-hidden="true"><path d="M24 4l5.8 12.6 13.7 1.6-10.1 9.4 2.7 13.6L24 34.6 11.9 41.2l2.7-13.6L4.5 18.2l13.7-1.6z" fill="rgba(255,200,61,.4)" stroke="#f0aa08" stroke-width="2.6" stroke-linejoin="round"/></svg><em>' + d + "</em>";
+      } else {
+        s.textContent = d;
+      }
+      cal.appendChild(s);
+    }
+
+    var target = new Date(CONFIG.date + "T" + CONFIG.time + ":00+07:00").getTime();
+    var days = Math.ceil((target - Date.now()) / 86400000);
+    $("count").textContent = days > 0 ? "Còn " + days + " ngày nữa" : (days === 0 ? "Hôm nay là ngày vui" : "Lễ đã diễn ra");
+
+    var cs = [
+      [8, 10, "c", 10, "#6bb8ee"], [88, 8, "s", 18, "#ffc83d"], [20, 24, "r", 12, "#ffc83d"], [78, 22, "c", 8, "#a9d9f6"],
+      [6, 46, "s", 14, "#a9d9f6"], [92, 42, "r", 14, "#6bb8ee"], [12, 72, "c", 12, "#ffc83d"], [86, 70, "s", 16, "#6bb8ee"],
+      [30, 88, "r", 10, "#a9d9f6"], [70, 90, "c", 9, "#ffc83d"], [50, 6, "r", 9, "#6bb8ee"], [48, 94, "s", 12, "#ffc83d"]
+    ];
+    var box = document.querySelector("[data-confetti=stage]");
+    cs.forEach(function (c, i) {
+      var el = document.createElement("i");
+      el.className = c[2];
+      el.style.cssText = "left:" + c[0] + "%;top:" + c[1] + "%;width:" + c[3] + "px;height:" + (c[2] === "r" ? c[3] * 0.45 : c[3]) + "px;background:" + c[4] + ";animation-delay:" + (-i * 0.7) + "s;animation-duration:" + (5 + (i % 4)) + "s";
+      box.appendChild(el);
+    });
+
+    var fall = $("fall"), NS = "http://www.w3.org/2000/svg";
+    for (var k = 0; k < 18; k++) {
+      var left = (k * 53 + 7) % 100, dur = 14 + (k * 7) % 12, delay = -((k * 5) % 20), size = 14 + (k * 3) % 14;
+      if (k % 3 === 2) {
+        var r = document.createElement("div");
+        r.className = "ring";
+        r.style.cssText = "left:" + left + "%;animation-duration:" + dur + "s;animation-delay:" + delay + "s;width:" + (size - 2) + "px;height:" + (size - 2) + "px";
+        fall.appendChild(r);
+      } else {
+        var sv = document.createElementNS(NS, "svg");
+        sv.setAttribute("viewBox", "0 0 64 64");
+        sv.style.cssText = "left:" + left + "%;width:" + size + "px;height:" + size + "px;animation-duration:" + dur + "s;animation-delay:" + delay + "s";
+        var u = document.createElementNS(NS, "use");
+        u.setAttribute("href", "#cap-icon");
+        sv.appendChild(u);
+        fall.appendChild(sv);
+      }
+    }
+
+    var stage = $("stage"), env = $("env"), invite = $("invite"), timers = [];
+    function later(fn, ms) { timers.push(setTimeout(fn, ms)); }
+    function clearTimers() { timers.forEach(clearTimeout); timers = []; }
+    function openEnvelope() {
+      if (stage.classList.contains("opening")) return;
+      stage.classList.add("opening");
+      env.classList.add("opening");
+      later(function () { env.classList.add("flap-back"); }, 380);
+      later(function () { env.classList.add("rise"); }, 800);
+      later(function () { stage.classList.add("leave"); }, 2300);
+      later(function () {
+        stage.hidden = true;
+        invite.hidden = false;
+        window.scrollTo(0, 0);
+        requestAnimationFrame(function () { requestAnimationFrame(function () { invite.classList.add("show"); }); });
+      }, 2900);
+    }
+    function reset() {
+      clearTimers();
+      invite.classList.remove("show");
+      invite.hidden = true;
+      stage.hidden = false;
+      stage.classList.remove("opening", "leave");
+      env.classList.remove("opening", "flap-back", "rise");
+      window.scrollTo(0, 0);
+    }
+    $("openBtn").addEventListener("click", openEnvelope);
+    $("again").addEventListener("click", reset);
+  })();
+
+  /* Lời chúc: lưu ngay trong trình duyệt (localStorage), không cần máy chủ. */
+  (function () {
+    var $ = function (id) { return document.getElementById(id); };
+    function pad(n) { return (n < 10 ? "0" : "") + n; }
+    function fmt(ts) {
+      var d = new Date(ts);
+      if (isNaN(d.getTime())) return "";
+      return pad(d.getDate()) + "/" + pad(d.getMonth() + 1) + "/" + d.getFullYear() + " " + pad(d.getHours()) + ":" + pad(d.getMinutes());
+    }
+    var note = $("wishNote"), form = $("wishForm"), list = $("wList"), empty = $("wEmpty"), lt = $("wListTitle");
+    var inName = $("wName"), inText = $("wText"), cnt = $("wCount"), send = $("wSend"), msg = $("wMsg");
+    var KEY = "thiep-tot-nghiep-wishes";
+    function setMsg(t, kind) { msg.textContent = t; msg.className = "wish-msg" + (kind ? " " + kind : ""); }
+
+    $("heroWish").addEventListener("click", function () { $("wishes").scrollIntoView({ behavior: "smooth", block: "start" }); });
+    inText.addEventListener("input", function () { cnt.textContent = inText.value.length + "/500"; });
+
+    function readLocal() {
+      try { var a = JSON.parse(localStorage.getItem(KEY) || "[]"); return Array.isArray(a) ? a : []; } catch (e) { return []; }
+    }
+    function writeLocal(a) {
+      try { localStorage.setItem(KEY, JSON.stringify(a)); return true; } catch (e) { return false; }
+    }
+
+    form.hidden = false; lt.hidden = false;
+    note.textContent = "Lời chúc bạn gửi được lưu ngay trên trình duyệt này và hiện bên dưới.";
+    note.hidden = false;
+
+    function draw() {
+      var items = readLocal().concat(CONFIG.wishes || []);
+      lt.textContent = "Lời chúc từ khách mời" + (items.length ? " (" + items.length + ")" : "");
+      list.textContent = "";
+      items.forEach(function (w) {
+        var item = document.createElement("div"); item.className = "wish-item";
+        var nm = document.createElement("b"); nm.textContent = String(w.name || "Khách mời");
+        var tx = document.createElement("p"); tx.textContent = String(w.text || "");
+        item.appendChild(nm); item.appendChild(tx);
+        if (w.at) { var t = fmt(w.at); if (t) { var sm = document.createElement("small"); sm.textContent = t; item.appendChild(sm); } }
+        list.appendChild(item);
+      });
+      list.hidden = items.length === 0;
+      empty.hidden = items.length !== 0;
+    }
+    draw();
+
+    function submitWish() {
+      var n = inName.value.trim(), t = inText.value.trim();
+      if (!n || !t) { setMsg("Bạn hãy nhập cả tên và lời chúc nhé.", "err"); return; }
+      var wish = { name: n.slice(0, 40), text: t.slice(0, 500), at: Date.now() };
+      var all = readLocal(); all.unshift(wish);
+      if (!writeLocal(all)) { setMsg("Trình duyệt không cho lưu lời chúc. Bạn hãy thử tắt chế độ ẩn danh.", "err"); return; }
+      inText.value = ""; cnt.textContent = "0/500";
+      setMsg("Đã lưu lời chúc. Cảm ơn bạn rất nhiều!", "ok");
+      draw();
+      if (CONFIG.ownerEmail) {
+        var a = $("mailBtn");
+        a.href = "mailto:" + CONFIG.ownerEmail + "?subject=" + encodeURIComponent("Lời chúc tốt nghiệp từ " + wish.name) + "&body=" + encodeURIComponent(wish.text);
+        a.hidden = false;
+      }
+    }
+    send.addEventListener("click", submitWish);
+    form.addEventListener("submit", function (e) { e.preventDefault(); });
+    inName.addEventListener("keydown", function (e) { if (e.key === "Enter") { e.preventDefault(); submitWish(); } });
+  })();
+</script>
+</body>
+</html>
